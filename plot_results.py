@@ -72,9 +72,13 @@ hourly_price.index.name = 'datetime'
 
 # 4) Merge and plot all term scores against price
 merged = hourly_price.join(preds_df, how='inner')
-fig, ax_price = plt.subplots(figsize=(12, 6))
+# Calculate price differences
+merged['price_diff'] = merged['Close'].diff()
+
+fig, (ax_price, ax_diff) = plt.subplots(2, 1, figsize=(12, 8), height_ratios=[2, 1], sharex=True)
+
 # Price on primary axis
-ax_price.plot(merged.index, merged['Close'], label='S&P 500 Hourly Close (UTC)', color='tab:blue')
+ax_price.plot(merged.index, merged['Close'], label='S&P 500 Hourly Close (UTC)', color='tab:red')
 ax_price.set_xlabel('Datetime (UTC)')
 ax_price.set_ylabel('Close Price (USD)')
 ax_price.grid(True)
@@ -85,6 +89,14 @@ ax_scores.plot(merged.index, merged['short_score'], linestyle='--', label='Short
 ax_scores.plot(merged.index, merged['medium_score'], linestyle='-.', label='Medium-Term Score')
 ax_scores.plot(merged.index, merged['long_score'], linestyle=':', label='Long-Term Score')
 ax_scores.set_ylabel('Prediction Score')
+# Add horizontal line at y=0
+ax_scores.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
+
+# Plot price differences
+ax_diff.plot(merged.index, merged['price_diff'], label='Price Difference', color='tab:blue')
+ax_diff.set_ylabel('Price Difference (USD)')
+ax_diff.grid(True)
+ax_diff.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
 
 # Combine legends from both axes
 price_handles, price_labels = ax_price.get_legend_handles_labels()
