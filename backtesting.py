@@ -34,6 +34,22 @@ def load_predictions(folder='predictions/'):
     df = pd.DataFrame(records).set_index('datetime').sort_index()
     return df
 
+def prepare_predictions_for_horizons(preds_df, horizons):
+    """
+    Prepare predictions DataFrame with scores mapped to different horizons
+    
+    Args:
+        preds_df: DataFrame with original predictions
+        horizons: dict of horizon names to (timedelta, score_type) tuples
+    """
+    preds = preds_df.copy()
+    # Map scores to horizons
+    for horizon_name, (_, score_type) in horizons.items():
+        if score_type not in ['short', 'medium', 'long']:
+            raise ValueError(f"Invalid score type '{score_type}'. Must be one of: short, medium, long")
+        preds[f'{horizon_name}_score'] = preds[f'{score_type}_score']
+    return preds
+
 # 2) Fetch daily S&P 500 closes covering your prediction range
 def fetch_daily_close(start, end):
     data = yf.download(
@@ -103,10 +119,8 @@ def evaluate(preds, score_terms, thresholds):
             continue
         score_v = score[mask]
         ret_v = ret[mask]
-        # Regression metrics
+        # Correlation metric
         pearson_r = score_v.corr(ret_v)
-        mse = mean_squared_error(ret_v, score_v)
-        mae = mean_absolute_error(ret_v, score_v)
         # Classification: map returns to Up/Flat/Down
         def true_label(x):
             if x > thresholds['ret_up']:
@@ -122,8 +136,6 @@ def evaluate(preds, score_terms, thresholds):
         results.append({
             'term': term,
             'pearson_r': pearson_r,
-            'mse': mse,
-            'mae': mae,
             'accuracy': report['accuracy'],
             'precision_up': report['Up']['precision'],
             'recall_up': report['Up']['recall'],
@@ -134,19 +146,25 @@ def evaluate(preds, score_terms, thresholds):
 # —— Main ——
 if __name__ == '__main__':
     preds_df = load_predictions('predictions/')
+    horizons = {
+        '1w': (timedelta(weeks=1), 'short'),
+        '2w': (timedelta(weeks=2), 'short'),
+        '3w': (timedelta(weeks=3), 'short'),
+        '4w': (timedelta(weeks=4), 'short'),
+        'medium': (timedelta(weeks=13), 'medium'),
+        'long': (timedelta(weeks=26), 'long')
+    }
+    preds_df = prepare_predictions_for_horizons(preds_df, horizons)
     start = preds_df.index.min().strftime('%Y-%m-%d')
     end = (preds_df.index.max() + timedelta(days=1)).strftime('%Y-%m-%d')
     daily_close = fetch_daily_close(start, end)
-    horizons = {
-        'short': timedelta(weeks=4),
-        'medium': timedelta(weeks=13),
-        'long': timedelta(weeks=26),
-    }
-    preds_with_ret = compute_returns(preds_df, daily_close, horizons)
-    thresholds = {'ret_up': 0.01, 'score_flat': 20}
+    # Extract just the timedeltas for compute_returns
+    horizons_deltas = {name: delta for name, (delta, _) in horizons.items()}
+    preds_with_ret = compute_returns(preds_df, daily_close, horizons_deltas)
+    thresholds = {'ret_up': 0.00, 'score_flat': 1}
     results = evaluate(
         preds_with_ret,
-        score_terms=['short', 'medium', 'long'],
+        score_terms=list(horizons.keys()),
         thresholds=thresholds
     )
     print('\n=== Backtest Quality Metrics ===')
