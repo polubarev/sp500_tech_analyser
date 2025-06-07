@@ -1,0 +1,24 @@
+{
+  "datetime": "2025-05-12T13:00:06Z",
+  "short_term": {
+    "analysis": "S&P 500 has broken the ceiling of the falling trend in the short term, which indicates a slower initial falling rate. The index has support at points 5530 and resistance at points 5780. The short term momentum of the index is strongly positive, with RSI above 70. This indicates increasing optimism among investors and further price increase for S&P 500. However, particularly for big stocks, high RSI may be a sign that the stock is overbought and that there is a chance of a reaction downwards. The index is overall assessed as technically slightly negative for the short term.",
+    "special": "The short term momentum of the index is strongly positive, with RSI above 70. This indicates increasing optimism among investors and further price increase for S&amp;P 500.",
+    "conclusion": "The index is overall assessed as technically slightly negative for the short term.",
+    "recommendation": "Weak Negative",
+    "score": -29
+  },
+  "medium_term": {
+    "analysis": "S&P 500 has broken the floor of the rising trend channel in the medium long term, which indicates a weaker initial rising rate. The index is approacing resistance at 5820 points, which may give a negative reaction. However, a break upwards through 5820 points will be a positive signal. The index is assessed as technically neutral for the medium long term.",
+    "special": "The index is approacing resistance at 5820 points, which may give a negative reaction. However, a break upwards through 5820 points will be a positive signal.",
+    "conclusion": "The index is assessed as technically neutral for the medium long term.",
+    "recommendation": "Hold",
+    "score": 0
+  },
+  "long_term": {
+    "analysis": "S&P 500 shows strong development within a rising trend channel in the long term. This signals increasing optimism among investors and indicates continued rise. The index has support at points 4800 and resistance at points 6130. The index is assessed as technically positive for the long term.",
+    "special": null,
+    "conclusion": "The index is assessed as technically positive for the long term.",
+    "recommendation": "Positive",
+    "score": 56
+  }
+}

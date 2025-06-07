@@ -1,0 +1,24 @@
+{
+  "datetime": "2025-05-16T13:00:06Z",
+  "short_term": {
+    "analysis": "Investors have paid higher prices over time to buy S&P 500 and the index is in a rising trend channel in the short term. This signals increasing optimism among investors and indicates continued rise. The index is approacing resistance at 6000 points, which may give a negative reaction. However, a break upwards through 6000 points will be a positive signal. RSI is above 70 after a good price increase the past weeks. The index has strong positive momentum and further increase is indicated. However, particularly for big stocks, high RSI may be a sign that the stock is overbought and that there is a chance of a reaction downwards. The index is overall assessed as technically neutral for the short term.",
+    "special": "RSI is above 70 after a good price increase the past weeks. The index has strong positive momentum and further increase is indicated.",
+    "conclusion": "The index is overall assessed as technically neutral for the short term.",
+    "recommendation": "Hold",
+    "score": 15
+  },
+  "medium_term": {
+    "analysis": "S&P 500 has broken the floor of the rising trend channel in the medium long term, which indicates a weaker initial rising rate. The index is between support at points 5820 and resistance at points 6100. A definitive break through of one of these levels predicts the new direction. RSI above 70 shows that the index has strong positive momentum in the short term. Investors have steadily paid more to buy the index, which indicates increasing optimism and that the price will continue to rise. However, particularly for big stocks, high RSI may be a sign that the stock is overbought and that there is a chance of a reaction downwards. The index is overall assessed as technically slightly positive for the medium long term.",
+    "special": null,
+    "conclusion": "The index is overall assessed as technically slightly positive for the medium long term.",
+    "recommendation": "Weak Positive",
+    "score": 29
+  },
+  "long_term": {
+    "analysis": "Investors have paid higher prices over time to buy S&P 500 and the index is in a rising trend channel in the long term. This signals increasing optimism among investors and indicates continued rise. The index is testing resistance at points 6130. This could give a negative reaction, but an upward breakthrough of points 6130 means a positive signal. The index is assessed as technically slightly positive for the long term.",
+    "special": null,
+    "conclusion": "The index is assessed as technically slightly positive for the long term.",
+    "recommendation": "Weak Positive",
+    "score": 32
+  }
+}
