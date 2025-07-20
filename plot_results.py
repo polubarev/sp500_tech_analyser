@@ -41,7 +41,7 @@ yf_data = yf.download(
     tickers='^GSPC',
     start=start,
     end=end,
-    interval='30m',
+    interval='1h',
     progress=False,
     auto_adjust=False,
 )
@@ -75,34 +75,110 @@ merged = hourly_price.join(preds_df, how='inner')
 # Calculate price differences
 merged['price_diff'] = merged['Close'].diff()
 
-fig, (ax_price, ax_diff) = plt.subplots(2, 1, figsize=(12, 8), height_ratios=[2, 1], sharex=True)
+def generate_plot():
+    # 1) Load JSON predictions and align to UTC hours
+    folder = 'predictions/'  # adjust to your JSON folder
+    records = []
+    for filepath in glob.glob(os.path.join(folder, '*.json')):
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        dt = pd.to_datetime(data['datetime'])
+        # Localize or convert to Israel time
+        if dt.tzinfo is None:
+            dt = dt.tz_localize('Asia/Jerusalem')
+        else:
+            dt = dt.tz_convert('Asia/Jerusalem')
+        # Convert to UTC and round
+        dt = dt.tz_convert('UTC')
+        dt_hour = dt.round('h').tz_localize(None)
+        records.append({
+            'datetime': dt_hour,
+            'short_score': data['short_term']['score'],
+            'medium_score': data['medium_term']['score'],
+            'long_score': data['long_term']['score'],
+        })
 
-# Price on primary axis
-ax_price.plot(merged.index, merged['Close'], label='S&P 500 Hourly Close (UTC)', color='tab:red')
-ax_price.set_xlabel('Datetime (UTC)')
-ax_price.set_ylabel('Close Price (USD)')
-ax_price.grid(True)
+    preds_df = (
+        pd.DataFrame(records)
+          .set_index('datetime')
+          .sort_index()
+    )
 
-# Prediction scores on secondary axis
-ax_scores = ax_price.twinx()
-ax_scores.plot(merged.index, merged['short_score'], linestyle='--', label='Short-Term Score')
-ax_scores.plot(merged.index, merged['medium_score'], linestyle='-.', label='Medium-Term Score')
-ax_scores.plot(merged.index, merged['long_score'], linestyle=':', label='Long-Term Score')
-ax_scores.set_ylabel('Prediction Score')
-# Add horizontal line at y=0
-ax_scores.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
+    # 2) Fetch intraday S&P 500
+    start = preds_df.index.min().strftime('%Y-%m-%d')
+    end   = preds_df.index.max().strftime('%Y-%m-%d')
 
-# Plot price differences
-ax_diff.plot(merged.index, merged['price_diff'], label='Price Difference', color='tab:blue')
-ax_diff.set_ylabel('Price Difference (USD)')
-ax_diff.grid(True)
-ax_diff.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
+    yf_data = yf.download(
+        tickers='^GSPC',
+        start=start,
+        end=end,
+        interval='1h',
+        progress=False,
+        auto_adjust=False,
+    )
 
-# Combine legends from both axes
-price_handles, price_labels = ax_price.get_legend_handles_labels()
-score_handles, score_labels = ax_scores.get_legend_handles_labels()
-ax_price.legend(price_handles + score_handles, price_labels + score_labels, loc='upper left')
+    # Extract the Close series, ensuring it's a single Series
+    if 'Close' in yf_data.columns:
+        close_ser = yf_data['Close']
+    else:
+        close_ser = yf_data.xs('Close', axis=1, level=0)
+    if isinstance(close_ser, pd.DataFrame):
+        if close_ser.shape[1] == 1:
+            close_ser = close_ser.iloc[:, 0]
+        else:
+            raise ValueError('Expected single Close column, got multiple')
 
-plt.title('Hourly S&P 500 Close vs. Prediction Scores (UTC)')
-plt.tight_layout()
-plt.show()
+    # 3) Build continuous hourly price DataFrame
+    price_df = close_ser.to_frame(name='Close')
+    if price_df.index.tz is None:
+        price_df.index = price_df.index.tz_localize('America/New_York', ambiguous='infer')
+    price_df.index = price_df.index.tz_convert('UTC').tz_localize(None)
+    hourly_price = (
+        price_df
+          .resample('h')
+          .last()
+          .ffill()
+    )
+    hourly_price.index.name = 'datetime'
+
+    # 4) Merge and plot all term scores against price
+    merged = hourly_price.join(preds_df, how='inner')
+    # Calculate price differences
+    merged['price_diff'] = merged['Close'].diff()
+
+    fig, (ax_price, ax_diff) = plt.subplots(2, 1, figsize=(12, 8), height_ratios=[2, 1], sharex=True)
+
+    # Price on primary axis
+    ax_price.plot(merged.index, merged['Close'], label='S&P 500 Hourly Close (UTC)', color='tab:red')
+    ax_price.set_xlabel('Datetime (UTC)')
+    ax_price.set_ylabel('Close Price (USD)')
+    ax_price.grid(True)
+
+    # Prediction scores on secondary axis
+    ax_scores = ax_price.twinx()
+    ax_scores.plot(merged.index, merged['short_score'], linestyle='--', label='Short-Term Score')
+    ax_scores.plot(merged.index, merged['medium_score'], linestyle='-.', label='Medium-Term Score')
+    ax_scores.plot(merged.index, merged['long_score'], linestyle=':', label='Long-Term Score')
+    ax_scores.set_ylabel('Prediction Score')
+    # Add horizontal line at y=0
+    ax_scores.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
+
+    # Plot price differences
+    ax_diff.plot(merged.index, merged['price_diff'], label='Price Difference', color='tab:blue')
+    ax_diff.set_ylabel('Price Difference (USD)')
+    ax_diff.grid(True)
+    ax_diff.axhline(y=0, color='gray', linestyle='-', alpha=0.3)
+
+    # Combine legends from both axes
+    price_handles, price_labels = ax_price.get_legend_handles_labels()
+    score_handles, score_labels = ax_scores.get_legend_handles_labels()
+    ax_price.legend(price_handles + score_handles, price_labels + score_labels, loc='upper left')
+
+    plt.title('Hourly S&P 500 Close vs. Prediction Scores (UTC)')
+    plt.tight_layout()
+    return fig
+
+if __name__ == '__main__':
+    fig = generate_plot()
+    plt.show()
+

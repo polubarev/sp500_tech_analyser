@@ -147,16 +147,16 @@ def evaluate(preds, score_terms, thresholds):
 if __name__ == '__main__':
     preds_df = load_predictions('predictions/')
     horizons = {
-        '1w': (timedelta(weeks=1), 'short'),
-        '2w': (timedelta(weeks=2), 'short'),
-        '3w': (timedelta(weeks=3), 'short'),
-        '4w': (timedelta(weeks=4), 'short'),
-        'medium': (timedelta(weeks=13), 'medium'),
-        'long': (timedelta(weeks=26), 'long')
+        'short_1w': (timedelta(weeks=1), 'short'),
+        'short_2w': (timedelta(weeks=2), 'short'),
+        'short_3w': (timedelta(weeks=3), 'short'),
+        'short_4w': (timedelta(weeks=4), 'short'),
+        'medium_13w': (timedelta(weeks=13), 'medium'),
+        'long_26w': (timedelta(weeks=26), 'long')
     }
     preds_df = prepare_predictions_for_horizons(preds_df, horizons)
     start = preds_df.index.min().strftime('%Y-%m-%d')
-    end = (preds_df.index.max() + timedelta(days=1)).strftime('%Y-%m-%d')
+    end = (preds_df.index.max() + timedelta(weeks=27)).strftime('%Y-%m-%d')
     daily_close = fetch_daily_close(start, end)
     # Extract just the timedeltas for compute_returns
     horizons_deltas = {name: delta for name, (delta, _) in horizons.items()}

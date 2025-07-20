@@ -1,0 +1,52 @@
+date,short_term_rec,short_term_score,medium_term_rec,medium_term_score,long_term_rec,long_term_score
+2025-05-09,Weak Negative,-29,Hold,0,Positive,56
+2025-05-12,Weak Negative,-29,Hold,0,Positive,56
+2025-05-13,Positive,87,Positive,72,Weak Positive,32
+2025-05-14,Weak Positive,41,Positive,83,Weak Positive,32
+2025-05-15,Weak Positive,41,Weak Positive,29,Weak Positive,32
+2025-05-16,Hold,15,Weak Positive,29,Weak Positive,32
+2025-05-19,Hold,15,Weak Positive,29,Weak Positive,32
+2025-05-20,Hold,16,Weak Positive,29,Weak Positive,32
+2025-05-21,Hold,17,Weak Positive,48,Weak Positive,32
+2025-05-22,Weak Positive,29,Positive,68,Weak Positive,32
+2025-05-23,Weak Positive,29,Positive,68,Weak Positive,32
+2025-05-26,Positive,54,Hold,-8,Weak Positive,32
+2025-05-27,Positive,54,Hold,-8,Weak Positive,32
+2025-05-28,Weak Positive,29,Weak Positive,48,Weak Positive,32
+2025-05-29,Weak Positive,29,Positive,89,Weak Positive,32
+2025-05-30,Weak Positive,29,Weak Positive,47,Weak Positive,32
+2025-06-02,Weak Positive,29,Weak Positive,46,Weak Positive,32
+2025-06-03,Hold,17,Weak Positive,45,Weak Positive,30
+2025-06-04,Positive,79,Weak Positive,44,Weak Positive,32
+2025-06-05,Positive,79,Weak Positive,45,Weak Positive,32
+2025-06-06,Hold,19,Weak Positive,45,Weak Positive,32
+2025-06-09,Positive,88,Weak Positive,45,Weak Positive,32
+2025-06-10,Positive,89,Weak Positive,45,Weak Positive,30
+2025-06-11,Positive,89,Weak Positive,43,Weak Positive,30
+2025-06-12,Positive,89,Weak Positive,43,Weak Positive,32
+2025-06-13,Positive,90,Hold,15,Weak Positive,32
+2025-06-16,Positive,54,Weak Positive,42,Weak Positive,32
+2025-06-17,Positive,83,Hold,14,Weak Positive,32
+2025-06-18,Positive,54,Weak Positive,42,Weak Positive,30
+2025-06-19,Positive,54,Weak Positive,41,Weak Positive,30
+2025-06-20,Positive,54,Weak Positive,41,Weak Positive,30
+2025-06-23,Positive,54,Weak Positive,41,Weak Positive,32
+2025-06-24,Positive,90,Hold,14,Weak Positive,32
+2025-06-25,Positive,90,Hold,14,Weak Positive,32
+2025-06-26,Positive,90,Hold,14,Weak Positive,32
+2025-06-27,Positive,91,Positive,78,Positive,84
+2025-06-30,Positive,91,Positive,93,Positive,84
+2025-07-01,Positive,91,Positive,90,Positive,84
+2025-07-02,Positive,91,Positive,94,Positive,84
+2025-07-03,Positive,91,Positive,92,Positive,85
+2025-07-04,Positive,91,Positive,92,Positive,91
+2025-07-07,Positive,91,Positive,92,Positive,91
+2025-07-08,Positive,91,Positive,92,Positive,84
+2025-07-09,Positive,91,Positive,92,Positive,84
+2025-07-10,Positive,91,Positive,91,Positive,91
+2025-07-11,Positive,91,Positive,90,Positive,91
+2025-07-14,Positive,84,Positive,91,Positive,91
+2025-07-15,Positive,86,Positive,88,Positive,91
+2025-07-16,Weak Positive,37,Positive,90,Positive,84
+2025-07-17,Positive,76,Positive,87,Positive,91
+2025-07-18,Positive,92,Positive,87,Positive,91
